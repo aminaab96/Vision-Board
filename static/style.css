@@ -1,0 +1,10 @@
+body {
+  background: #f8f9fa;
+}
+.card-img-top {
+  object-fit: cover;
+  height: 150px;
+}
+.progress-bar {
+  font-size: 0.75rem;
+}
