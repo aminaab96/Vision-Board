@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Vision Board</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="container my-4">
+
+  <h1 class="mb-4">🌟 Vision Board</h1>
+
+  <form action="/add" method="POST" class="mb-5 row g-2">
+    <div class="col-md-2"><input class="form-control" name="title" placeholder="Title" required></div>
+    <div class="col-md-2"><input class="form-control" name="description" placeholder="Description"></div>
+    <div class="col-md-2"><input class="form-control" name="image_url" placeholder="Image URL"></div>
+    <div class="col-md-2">
+      <select class="form-select" name="category">
+        <option>Goal</option>
+        <option>Idea</option>
+        <option>Project</option>
+      </select>
+    </div>
+    <div class="col-md-1"><input class="form-control" name="month" placeholder="Month"></div>
+    <div class="col-md-1"><input class="form-control" name="progress" type="number" min="0" max="100" placeholder="%"></div>
+    <div class="col-md-2"><button class="btn btn-primary w-100">Add</button></div>
+  </form>
+
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for item in items %}
+    <div class="col">
+      <div class="card h-100">
+        <img src="{{ item.image_url if item.image_url else 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=400' }}"
+             class="card-img-top"
+             onerror="this.src='https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=400'">
+        <div class="card-body">
+          <h5 class="card-title">{{ item.title }}</h5>
+          <p class="card-text">{{ item.description }}</p>
+          <p>Category: {{ item.category }} | Month: {{ item.month }}</p>
+          <div class="progress mb-2">
+            <div class="progress-bar" style="width: {{ item.progress }}%">{{ item.progress }}%</div>
+          </div>
+          <form action="/edit/{{ item.doc_id }}" method="POST" class="mb-2">
+            <input type="text" name="title" value="{{ item.title }}" class="form-control mb-1">
+            <input type="text" name="description" value="{{ item.description }}" class="form-control mb-1">
+            <input type="text" name="image_url" value="{{ item.image_url }}" class="form-control mb-1">
+            <select name="category" class="form-select mb-1">
+              <option {% if item.category == 'Goal' %}selected{% endif %}>Goal</option>
+              <option {% if item.category == 'Idea' %}selected{% endif %}>Idea</option>
+              <option {% if item.category == 'Project' %}selected{% endif %}>Project</option>
+            </select>
+            <input type="text" name="month" value="{{ item.month }}" class="form-control mb-1">
+            <input type="number" name="progress" value="{{ item.progress }}" min="0" max="100" class="form-control mb-1">
+            <button class="btn btn-sm btn-warning w-100">Update</button>
+          </form>
+          <a href="/delete/{{ item.doc_id }}" class="btn btn-sm btn-danger w-100">Delete</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+</body>
+</html>
